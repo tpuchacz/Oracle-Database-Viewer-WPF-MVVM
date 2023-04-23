@@ -14,17 +14,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MVVMToolkit
+namespace MVVMToolkit;
+
+/// <summary>
+/// Logika interakcji dla klasy DatabaseView.xaml
+/// </summary>
+public partial class DatabaseView : UserControl
 {
-    /// <summary>
-    /// Logika interakcji dla klasy DatabaseView.xaml
-    /// </summary>
-    public partial class DatabaseView : UserControl
+    public DatabaseView()
     {
-        public DatabaseView()
-        {
-            DataContext = new DatabaseViewModel();
-            InitializeComponent();
-        }
+        DataContext = new DatabaseViewModel();
+        InitializeComponent();
     }
 }

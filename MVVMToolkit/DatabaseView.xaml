@@ -10,15 +10,19 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="5*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <StackPanel>
+            <ListBox Width="120"
+                     ItemsSource="{Binding Path=Tables, UpdateSourceTrigger=PropertyChanged}"
+                     IsSynchronizedWithCurrentItem="True" FontSize="12" Height="120" />
+        </StackPanel>
         <TextBlock Text="{Binding ErrorMsg}" TextWrapping="WrapWithOverflow"></TextBlock>
         <Button Grid.Column="1" Width="100" Height="30" Content="Ładuj dane" Command="{Binding LoadDataCommand}"/>
-        <DataGrid ItemsSource="{Binding Dt}" Grid.Column="2"></DataGrid>
-
+        <DataGrid ItemsSource="{Binding Path=OracleDBData}" Grid.Column="2" AutoGenerateColumns="True"/>
     </Grid>
 </UserControl>

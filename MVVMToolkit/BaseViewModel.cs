@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVMToolkit
+namespace MVVMToolkit;
+
+public partial class BaseViewModel : ObservableRecipient
 {
-    public partial class BaseViewModel : ObservableRecipient
-    {
-        public BaseViewModel(){}
-        public BaseViewModel(SuccesfulLogin loginInfo){}
-    }
+    public BaseViewModel(){}
+    public BaseViewModel(SuccesfulLogin loginInfo){}
 }

@@ -11,6 +11,23 @@ namespace MVVMToolkit;
 
 public partial class EmployeesModel : ObservableObject
 {
+    /*public EmployeesModel(int employeeId,string firstName, string lastName,
+                         string email, string phoneNumber, DateTime hireDate, string jobId,
+                         double salary, double commissionPct, int managerId, int departmentId)
+    {
+        EmployeeId = employeeId;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        HireDate = hireDate;
+        JobId = jobId;
+        Salary = salary;
+        CommissionPct = commissionPct;
+        ManagerId = managerId;
+        DepartmentId = departmentId;
+    }*/
+
     [ObservableProperty]
     private int _employeeId;
 
@@ -33,10 +50,10 @@ public partial class EmployeesModel : ObservableObject
     private string _jobId;
 
     [ObservableProperty]
-    private int? _salary;
+    private double? _salary;
 
     [ObservableProperty]
-    private int? _commissionPct;
+    private double? _commissionPct;
 
     [ObservableProperty]
     private int? _managerId;

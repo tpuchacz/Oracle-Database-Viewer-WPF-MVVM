@@ -16,57 +16,76 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMToolkit
+namespace MVVMToolkit;
+
+public partial class DatabaseViewModel : BaseViewModel, IRecipient<SuccesfulLogin>
 {
-    public partial class DatabaseViewModel : BaseViewModel, IRecipient<SuccesfulLogin>
+    private OracleConnection? conn;
+
+    [ObservableProperty]
+    private string? connStr;
+
+    [ObservableProperty]
+    private OracleCredential? cred;
+
+    [ObservableProperty]
+    private string? _errorMsg;
+
+    public DatabaseViewModel()
     {
-        private OracleConnection? conn;
+        IMessenger messenger = Messenger;
+        messenger.Register<SuccesfulLogin>(this);
+    }
 
-        [ObservableProperty]
-        private string? connStr;
+    //Przyjmujemy SuccesfulLogin od LoginViewModel
+    public void Receive(SuccesfulLogin message)
+    {
+        ConnStr = message.ConnectionString;
+        Cred = message.Credentials;
+    }
 
-        [ObservableProperty]
-        private OracleCredential? cred;
+    //Kolekcja pracowników
+    [ObservableProperty]
+    private ObservableCollection<EmployeesModel> _oracleDBData = new ObservableCollection<EmployeesModel>();
 
-        [ObservableProperty]
-        private string? _errorMsg;
-
-        public DatabaseViewModel()
+    [RelayCommand]
+    private void LoadData()
+    {
+        IMessenger messenger = Messenger;
+        messenger.Send("GetConnection");//Poprzez wysłanie wiadomości do LoginViewModel uzyskuje SuccesfulLogin
+        if (string.IsNullOrWhiteSpace(ConnStr) || Cred == null) { ErrorMsg = "Pusto"; }
+        else
         {
-            IMessenger messenger = Messenger;
-            messenger.Register<SuccesfulLogin>(this);
-        }
-
-        //Przyjmujemy SuccesfulLogin od LoginViewModel
-        public void Receive(SuccesfulLogin message)
-        {
-            ConnStr = message.ConnectionString;
-            Cred = message.Credentials;
-        }
-
-        [ObservableProperty]
-        private DataTable? _oracleDBData;
-
-
-        [RelayCommand]
-        private void LoadData()
-        {
-            IMessenger messenger = Messenger;
-            messenger.Send("GetConnection");//Poprzez wysłanie wiadomości do LoginViewModel uzyskuje SuccesfulLogin
-            if (string.IsNullOrWhiteSpace(ConnStr) || Cred == null) { ErrorMsg = "Pusto"; }
-            else
+            using (conn = new OracleConnection(ConnStr, Cred))
             {
-                using (conn = new OracleConnection(ConnStr, Cred))
+                conn.Open();
+                using (OracleCommand cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (OracleCommand cmd = conn.CreateCommand())
+                    cmd.CommandText = $"SELECT * FROM employees ORDER BY employee_id";
+                    cmd.CommandType = CommandType.Text;
+                    using (OracleDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.CommandText = "SELECT * FROM EMPLOYEES";
-                        cmd.CommandType = CommandType.Text;
-                        using (OracleDataReader reader = cmd.ExecuteReader())
+                        
+                        while (reader.Read())
                         {
-                            OracleDBData = new DataTable();
-                            OracleDBData.Load(reader);
+                            EmployeesModel employee = new EmployeesModel();
+                            employee.EmployeeId = reader.GetInt32(0);
+                            if (!reader.IsDBNull(1))
+                                employee.FirstName = reader.GetString(1);
+                            employee.LastName = reader.GetString(2);
+                            employee.Email = reader.GetString(3);
+                            if (!reader.IsDBNull(4))
+                                employee.PhoneNumber = reader.GetString(4);
+                            employee.HireDate = reader.GetDateTime(5);
+                            employee.JobId = reader.GetString(6);
+                            employee.Salary = reader.GetDouble(7);
+                            if(!reader.IsDBNull(8))
+                                employee.CommissionPct = reader.GetDouble(8);
+                            if (!reader.IsDBNull(9))
+                                employee.ManagerId = reader.GetInt32(9);
+                            if (!reader.IsDBNull(10))
+                                employee.DepartmentId = reader.GetInt32(10);
+                            OracleDBData.Add(employee);
                         }
                     }
                 }
