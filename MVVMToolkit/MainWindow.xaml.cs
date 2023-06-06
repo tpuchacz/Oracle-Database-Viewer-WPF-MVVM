@@ -1,4 +1,5 @@
-﻿using MVVMToolkit;
+﻿using MahApps.Metro.Controls;
+using MVVMToolkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ using System.Windows.Shapes;
 namespace MVVMToolkit;
 
 //Tylko kod dotyczący widoku
-public partial class MainWindow : Window
+public partial class MainWindow : MetroWindow
 {
     public MainWindow()
     {

@@ -1,14 +1,36 @@
+<<<<<<< Updated upstream:MVVMToolkit/MainWindow.xaml
 ﻿<Window x:Class="MVVMToolkit.MainWindow"
+=======
+<mah:MetroWindow x:Class="MVVMToolkit.Views.MainWindow"
+>>>>>>> Stashed changes:MVVMToolkit/Views/MainWindow.xaml
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+<<<<<<< Updated upstream:MVVMToolkit/MainWindow.xaml
         xmlns:local="clr-namespace:MVVMToolkit"
         FontSize="24" MinHeight="300" MinWidth="300"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}" WindowStartupLocation="CenterScreen"
         Title="Oracle Database Viewer" Height="450" Width="800">
+=======
+        xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        FontSize="12" MinHeight="300" MinWidth="300" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
+        Title="Oracle Database Viewer" Height="{Binding ActualHeight, ElementName=Navigation.CurrentView}"
+        SizeToContent="WidthAndHeight">
+    <mah:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Crimson.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </mah:MetroWindow.Resources>
+>>>>>>> Stashed changes:MVVMToolkit/Views/MainWindow.xaml
     <Grid>
         <ContentControl Content="{Binding SelectedViewModel}">
         </ContentControl>
     </Grid>
-</Window>
+</mah:MetroWindow>
