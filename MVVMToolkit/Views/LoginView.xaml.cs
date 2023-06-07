@@ -12,17 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MVVMToolkit;
 
-namespace MVVMToolkit;
+namespace MVVMToolkit.Views;
 
-/// <summary>
-/// Logika interakcji dla klasy LoginView.xaml
-/// </summary>
 public partial class LoginView : UserControl
 {
     public LoginView()
     {
-        DataContext = new LoginViewModel();
         InitializeComponent();
     }
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

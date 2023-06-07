@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MVVMToolkit;
 
-namespace MVVMToolkit;
+namespace MVVMToolkit.ViewModels;
 
-public partial class BaseViewModel : ObservableRecipient
+public abstract partial class BaseViewModel : ObservableRecipient
 {
-    public BaseViewModel(){}
-    public BaseViewModel(SuccesfulLogin loginInfo){}
 }

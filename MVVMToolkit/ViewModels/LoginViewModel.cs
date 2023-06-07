@@ -10,16 +10,19 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using MVVMToolkit.Services;
+using MVVMToolkit.ViewModels;
+using MVVMToolkit;
 
-namespace MVVMToolkit;
-
-public record class SuccesfulLogin(string ConnectionString, OracleCredential Credentials);
-public partial class LoginViewModel : BaseViewModel, IRecipient<string>
+namespace MVVMToolkit.ViewModels;
+public partial class LoginViewModel : BaseViewModel
 {
-    IMessenger messenger;
+    private readonly IDatabaseConnectionService _databaseConnectionService;
 
-    [ObservableProperty]
-    private SuccesfulLogin sLogin;
+    public LoginViewModel(IDatabaseConnectionService databaseConnectionService)
+    {
+        _databaseConnectionService = databaseConnectionService;
+    }
 
     //Adres IP hosta, port oraz SID będzie można wybrać w jakimś menu logowania
     [ObservableProperty]
@@ -51,24 +54,15 @@ public partial class LoginViewModel : BaseViewModel, IRecipient<string>
 
             OracleCredential cred = new OracleCredential(Login, SecurePassword);
 
-            SLogin = new SuccesfulLogin(connStr, cred); //SLogin będzie wysyłany do DatabaseViewModel
-
-            using (OracleConnection conn = new OracleConnection(connStr, cred))
+            if (_databaseConnectionService.CheckCredentials(connStr, cred))
             {
-                try
-                {
-                    conn.Open();
-
-                    messenger = Messenger;
-                    messenger.Register<string>(this);
-                    messenger.Send(new DatabaseViewModel()); //Zmiana widoku poprzez wysłanie go do MainWindowViewModel
-
-                    SecurePassword.Dispose();
-                }
-                catch (OracleException ex)
-                {
-                    ErrorMsg = ex.Message;
-                }
+                IMessenger messenger = Messenger;
+                messenger.Send("change"); //Zmiana widoku poprzez wysłanie go do MainWindowViewModel
+                SecurePassword.Dispose();
+            }
+            else
+            {
+                ErrorMsg = "Logowanie nieudane. Sprawdź dane";
             }
         }
         else
@@ -80,18 +74,4 @@ public partial class LoginViewModel : BaseViewModel, IRecipient<string>
     //w ten sposób, więc na ten moment sprawdzam tylko Login
     private bool CanClick()
         => !string.IsNullOrWhiteSpace(Login);
-
-    //Uzyskanie zapytania o wysłanie logowania
-    public void Receive(string message)
-    {
-        if (message.Equals("GetConnection"))
-            SendLogin();
-    }
-
-    //Wysyłanie danych logowania do DatabaseView
-    private void SendLogin()
-    {
-        messenger = Messenger;
-        messenger.Send(new SuccesfulLogin(SLogin.ConnectionString, SLogin.Credentials));
-    }
 }

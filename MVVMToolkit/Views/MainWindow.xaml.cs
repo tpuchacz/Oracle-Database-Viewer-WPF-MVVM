@@ -1,4 +1,4 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using MVVMToolkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +13,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MVVMToolkit;
+using MahApps.Metro.Controls;
 
-namespace MVVMToolkit;
+namespace MVVMToolkit.Views;
 
-/// <summary>
-/// Logika interakcji dla klasy DatabaseView.xaml
-/// </summary>
-public partial class DatabaseView : UserControl
+//Tylko kod dotyczący widoku
+public partial class MainWindow : MetroWindow
 {
-    public DatabaseView()
+    public MainWindow()
     {
-        DataContext = new DatabaseViewModel();
         InitializeComponent();
     }
 }

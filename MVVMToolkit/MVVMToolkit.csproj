@@ -8,14 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< Updated upstream
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
-=======
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
->>>>>>> Stashed changes
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.100" />
   </ItemGroup>
 
