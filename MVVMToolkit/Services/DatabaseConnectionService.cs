@@ -32,20 +32,20 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
 
     public bool CheckCredentials(string connectionString, OracleCredential credential)
     {
-            using (OracleConnection connection = new OracleConnection(connectionString, credential))
+        using (OracleConnection connection = new OracleConnection(connectionString, credential))
+        {
+            try
             {
-                try
-                {
-                    connection.Open();
-                    _connectionString = connectionString;
-                    _credential = credential;
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                connection.Open();
+                _connectionString = connectionString;
+                _credential = credential;
+                return true;
             }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 
     public List<string> GetTables()

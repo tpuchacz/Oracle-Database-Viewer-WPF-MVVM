@@ -19,6 +19,11 @@ using MVVMToolkit.Models;
 using MVVMToolkit.Services;
 using MVVMToolkit.ViewModels;
 using MVVMToolkit;
+using System.ComponentModel.DataAnnotations;
+using ControlzEx.Standard;
+using System.Drawing;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace MVVMToolkit.ViewModels;
 
@@ -83,29 +88,44 @@ public partial class DatabaseViewModel : BaseViewModel
     [RelayCommand]
     public void AcceptChanges()
     {
-            ErrorMsg = "";
-            DataTable? x = DbModel.SelectedTable.GetChanges();
-            if (x != null)
+        //Zaimplementować jakieś potwierdzenie
+        ErrorMsg = "";
+        DataTable? x = DbModel.SelectedTable.GetChanges();
+        if (x != null)
+        {
+            try
             {
-                try
-                {
-                    _databaseConnectionService.UpdateTable(DbModel.SelectedIndex, DbModel.SelectedTable);
-                    DbModel.SelectedTable.AcceptChanges();
-                    ErrorMsg = "Pomyślnie zatwierdzono zmiany!";
-                }
-                catch (OracleException ex)
-                {
-                    ErrorMsg = ex.Message;
-                }
+                _databaseConnectionService.UpdateTable(DbModel.SelectedIndex, DbModel.SelectedTable);
+                DbModel.SelectedTable.AcceptChanges();
+                ErrorMsg = "Pomyślnie zatwierdzono zmiany!";
             }
-            else
-                ErrorMsg = "Nie wprowadzono zmian";
+            catch (OracleException ex)
+            {
+                ErrorMsg = ex.Message;
+            }
+        }
+        else
+            ErrorMsg = "Nie wprowadzono zmian";
     }
 
     [RelayCommand]
     public void AddRow()
     {
         DataRow dr = DbModel.SelectedTable.NewRow();
+        if(DbModel.SelectedTable.PrimaryKey != null)
+        {
+            if (DbModel.SelectedTable.Columns[0].DataType == typeof(Int16)
+                || DbModel.SelectedTable.Columns[0].DataType == typeof(Int32)
+                || DbModel.SelectedTable.Columns[0].DataType == typeof(Int64))
+            {
+                try
+                {
+                    int maxID = Convert.ToInt32(DbModel.SelectedTable.Compute($"max([{DbModel.SelectedTable.Columns[0]}])", string.Empty));
+                    dr[0] = maxID + 1;
+                }
+                catch (InvalidCastException ex) { }
+            }
+        }
         DbModel.SelectedTable.Rows.Add(dr);
         ErrorMsg = "";
     }

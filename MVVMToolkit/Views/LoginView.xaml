@@ -7,7 +7,7 @@
              xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
-             Width="1280" Height="720" FontSize="40">
+             Width="1280" Height="720" FontSize="40" MinHeight="720" MinWidth="1280">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

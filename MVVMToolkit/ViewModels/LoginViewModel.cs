@@ -48,7 +48,7 @@ public partial class LoginViewModel : BaseViewModel
     private string _progressVisibility = "Hidden";
 
     [RelayCommand(CanExecute = nameof(CanClick))]
-    private async void Click()
+    private void Click()
     {
         if(SecurePassword != null)
         {
@@ -61,9 +61,11 @@ public partial class LoginViewModel : BaseViewModel
 
             using(BackgroundWorker bgw = new BackgroundWorker())
             {
-                List<object> arguments = new List<object>();
-                arguments.Add(connStr);
-                arguments.Add(cred);
+                List<object> arguments = new List<object>
+                {
+                    connStr,
+                    cred
+                };
                 bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
                 bgw.DoWork += Bgw_DoWork;
                 bgw.RunWorkerAsync(arguments);
@@ -78,17 +80,16 @@ public partial class LoginViewModel : BaseViewModel
     private void Bgw_DoWork(object? sender, DoWorkEventArgs e)
     {
         ProgressVisibility = "Visible";
-        List<object> list = (List<object>)e.Argument;
+        List<object> list = e.Argument as List<object>;
         if (_databaseConnectionService.CheckCredentials((string)list.ElementAt(0), (OracleCredential)list.ElementAt(1)))
         {
             IMessenger messenger = Messenger;
             messenger.Send("change"); //Zmiana widoku poprzez wysłanie go do MainWindowViewModel
-            SecurePassword.Dispose();
+            if(SecurePassword != null)
+                SecurePassword.Dispose();
         }
         else
-        {
             ErrorMsg = "Logowanie nieudane. Sprawdź dane";
-        }
     }
 
     private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
@@ -96,8 +97,6 @@ public partial class LoginViewModel : BaseViewModel
         ProgressVisibility = "Hidden";
     }
 
-    //Sprawdzenie czy SecurePassword jest puste jest problematyczne
-    //w ten sposób, więc na ten moment sprawdzam tylko Login
     private bool CanClick()
         => !string.IsNullOrWhiteSpace(Login);
 }
