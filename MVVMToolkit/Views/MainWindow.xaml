@@ -6,10 +6,9 @@
         xmlns:local="clr-namespace:MVVMToolkit"
         xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        FontSize="12" MinHeight="300" MinWidth="300" WindowStartupLocation="CenterScreen"
+        FontSize="12" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
-        Title="Oracle Database Viewer" Height="{Binding ActualHeight, ElementName=Navigation.CurrentView}"
-        SizeToContent="WidthAndHeight">
+        Title="Oracle Database Viewer" SizeToContent="WidthAndHeight" MaxHeight="1080" MaxWidth="1920">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,7 +19,6 @@
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
     <Grid>
-        <ContentControl Content="{Binding Navigation.CurrentView}">
-        </ContentControl>
+        <ContentControl Content="{Binding Navigation.CurrentView}" />
     </Grid>
 </mah:MetroWindow>

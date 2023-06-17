@@ -21,7 +21,6 @@ using System.Windows.Navigation;
 namespace MVVMToolkit.ViewModels;
 public partial class MainWindowViewModel : BaseViewModel, IRecipient<string>
 {
-
     private INavigationService _navigation;
 
     public INavigationService Navigation
@@ -37,6 +36,7 @@ public partial class MainWindowViewModel : BaseViewModel, IRecipient<string>
         IMessenger messenger = Messenger;
         messenger.Register<string>(this);
     }
+
     public void Receive(string message)
     {
         if (message.Equals("change"))

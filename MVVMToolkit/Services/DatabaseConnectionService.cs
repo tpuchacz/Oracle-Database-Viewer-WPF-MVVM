@@ -68,6 +68,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
                 }
             }
         }
+        tableNames.Sort();
         return tableNames;
     }
 
@@ -89,6 +90,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
                 string cmdString = $"select * from {tableNames.ElementAt(i)}";
                 adapter = new OracleDataAdapter(cmdString, connection);
                 OracleCommandBuilder builder = new OracleCommandBuilder(adapter);
+                builder.ConflictOption = ConflictOption.OverwriteChanges;
                 adapter.Fill(_dt);
                 var cols = new DataColumn[_dt.Columns.Count];
                 for(int j = 0; j < cols.Length; j++)
@@ -119,6 +121,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
         using (OracleConnection connection = new OracleConnection(_connectionString, _credential))
         {
             connection.Open();
+            Adapters.ElementAt(index).AcceptChangesDuringUpdate = true;
             Adapters.ElementAt(index).InsertCommand.Connection = connection;
             Adapters.ElementAt(index).UpdateCommand.Connection = connection;
             Adapters.ElementAt(index).DeleteCommand.Connection = connection;

@@ -33,12 +33,37 @@ public partial class DatabaseViewModel : BaseViewModel
     [ObservableProperty]
     private DatabaseModel _dbModel;
 
+    [ObservableProperty]
+    private int _progress = 0;
+
+    [ObservableProperty]
+    private string _isDataGridHidden = "Hidden";
+
+    [ObservableProperty]
+    private string _isProgressBarHidden = "Visible";
+
     private readonly IDatabaseConnectionService _databaseConnectionService;
 
     public DatabaseViewModel(DatabaseModel databaseModel, IDatabaseConnectionService databaseConnectionService)
     {
         DbModel = databaseModel;
         _databaseConnectionService = databaseConnectionService;
+        using(BackgroundWorker bgw = new BackgroundWorker())
+        {
+            bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
+            bgw.DoWork += LoadTables;
+            bgw.RunWorkerAsync();
+        }
+    }
+
+    private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+    {
+        IsDataGridHidden = "Visible";
+        IsProgressBarHidden = "Hidden";
+    }
+
+    private void LoadTables(object? sender, DoWorkEventArgs e)
+    {
         DbModel.TableNames = _databaseConnectionService.GetTables();
         DbModel.TableList = _databaseConnectionService.FillTables(DbModel.TableNames);
         DbModel.SelectedTable = DbModel.TableList.ElementAt(DbModel.SelectedIndex);
@@ -48,31 +73,44 @@ public partial class DatabaseViewModel : BaseViewModel
     public void RejectChanges()
     {
         DbModel.SelectedTable.RejectChanges();
+        ErrorMsg = "";
     }
+
     [RelayCommand]
     public void AcceptChanges()
     {
-        try
-        {
-            _databaseConnectionService.UpdateTable(DbModel.SelectedIndex, DbModel.SelectedTable);
-            DbModel.SelectedTable.AcceptChanges();
             ErrorMsg = "";
-        }
-        catch(OracleException ex)
-        {
-            ErrorMsg = ex.Message;
-        }
+            DataTable? x = DbModel.SelectedTable.GetChanges();
+            if (x != null)
+            {
+                try
+                {
+                    _databaseConnectionService.UpdateTable(DbModel.SelectedIndex, DbModel.SelectedTable);
+                    DbModel.SelectedTable.AcceptChanges();
+                    ErrorMsg = "Pomyślnie zatwierdzono zmiany!";
+                }
+                catch (OracleException ex)
+                {
+                    ErrorMsg = ex.Message;
+                }
+            }
+            else
+                ErrorMsg = "Nie wprowadzono zmian";
     }
+
     [RelayCommand]
     public void AddRow()
     {
         DataRow dr = DbModel.SelectedTable.NewRow();
         DbModel.SelectedTable.Rows.Add(dr);
+        ErrorMsg = "";
     }
+
     [RelayCommand]
     public void Search()
     {
-        if(!SearchBox.Equals(string.Empty))
+        ErrorMsg = "";
+        if (!SearchBox.Equals(string.Empty))
         {
             StringBuilder sb = new StringBuilder();
             foreach (DataColumn column in DbModel.SelectedTable.Columns)

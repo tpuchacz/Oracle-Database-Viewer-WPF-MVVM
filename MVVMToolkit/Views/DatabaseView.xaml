@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="White"
              xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels" FontSize="12"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:DatabaseViewModel}"
-             d:DesignHeight="720" d:DesignWidth="1080" Width="1080" Height="720">
+             Width="1280" Height="720">
+    <!--720 1080-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -15,40 +16,64 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel>
-            <TextBlock Text="Wybierz tabele:" Width="132" Margin="0,25,0,5" FontSize="18" FontWeight="Bold"/>
-            <ComboBox ItemsSource="{Binding DbModel.TableNames, IsAsync=True}"  FontSize="14" Width="130" VerticalAlignment="Top"
-              SelectedIndex="{Binding DbModel.SelectedIndex, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" Height="25"/>
-            <TextBlock Text="Wyszukaj:" Margin="0,25,0,5" FontSize="18" FontWeight="Bold" Width="90"/>
-            <TextBox Width="175" Margin="0,0,0,10" Text="{Binding SearchBox, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Width="150" Content="Szukaj" Command="{Binding SearchCommand}"/>
-        </StackPanel>
+        <Grid Grid.Row="0" Grid.Column="0" Margin="10,10,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Wybierz tabele:" FontSize="18" FontWeight="Bold" Margin="0,20,0,0"
+                       TextAlignment="Center" Grid.Row="0"/>
+            <ComboBox ItemsSource="{Binding DbModel.TableNames, IsAsync=True}"  FontSize="14"
+                  SelectedIndex="{Binding DbModel.SelectedIndex, Mode=TwoWay}" Margin="10,0,10,0"
+                  IsSynchronizedWithCurrentItem="True" Grid.Column="0" Grid.Row="1"/>
+            <TextBlock Text="Wyszukaj:" FontSize="18" FontWeight="Bold" Margin="0,50,0,0"
+                       TextAlignment="Center" Grid.Column="0" Grid.Row="2"/>
+            <TextBox Margin="10,5,10,5" Text="{Binding SearchBox, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="0" Grid.Row="3"/>
+            <Button Content="Szukaj" Command="{Binding SearchCommand}" Margin="10,0,10,0"
+                    Grid.Column="0" Grid.Row="4"/>
+        </Grid>
 
-        <StackPanel Grid.Row="1">
-            <Button Command="{Binding AddRowCommand}" Content="Dodaj rekord" Height="30" Width="150"
-                    Margin="0,30,0,0" />
-            <Button Command="{Binding AcceptChangesCommand}" Content="Zatwierdz zmiany" Height="30" Width="150"
-                    Margin="0,10,0,0"/>
-            <Button Command="{Binding RejectChangesCommand}" Content="Cofnij zmiany" Height="30" Width="150"
-                    Margin="0,10,0,0"/>
-        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Button Command="{Binding AddRowCommand}" Content="Dodaj rekord" Margin="0,20,0,0"
+                    Grid.Row="0" CommandParameter="{Binding HasError}"/>
+            <Button Command="{Binding AcceptChangesCommand}" Content="Zatwierdz zmiany" Margin="0,10,0,0"
+                    Grid.Row="1"/>
+            <Button Command="{Binding RejectChangesCommand}" Content="Cofnij zmiany" Margin="0,10,0,20"
+                    Grid.Row="2"/>
+        </Grid>
 
-        <DataGrid ItemsSource="{Binding DbModel.SelectedTable, Mode=OneWay, IsAsync=True}" Grid.Column="2" AutoGenerateColumns="True"
-                  CanUserAddRows="False" CanUserDeleteRows="False" EnableColumnVirtualization="True" MaxWidth="4000" MaxHeight="2560"
-                  EnableRowVirtualization="True" RowHeight="23" ScrollViewer.CanContentScroll="True" SelectionUnit="Cell"
-                  VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling" RowHeaderWidth="0"
-                  Width="auto" Height="auto" x:Name="oracleData" VirtualizingPanel.IsVirtualizingWhenGrouping="True" HeadersVisibility="Column"
-                  VerticalAlignment="Top" AutoGeneratingColumn="oracleData_AutoGeneratingColumn"/>
+        <DataGrid ItemsSource="{Binding DbModel.SelectedTable, Mode=OneWay, IsAsync=True}" x:Name="oracleData"
+                  Grid.Column="1" Grid.Row="0" AutoGenerateColumns="True" CanUserAddRows="False"
+                  CanUserDeleteRows="False" MaxWidth="4000" MaxHeight="2560" HeadersVisibility="Column"
+                  RowHeight="23" ScrollViewer.CanContentScroll="True" SelectionUnit="Cell"
+                  RowHeaderWidth="0" EnableColumnVirtualization="True" Margin="0,10,10,0"
+                  EnableRowVirtualization="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                  VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  AutoGeneratingColumn="oracleData_AutoGeneratingColumn" Visibility="{Binding IsDataGridHidden}"/>
+
+        <ProgressBar Grid.Row="0" Grid.Column="1" Visibility="{Binding IsProgressBarHidden}"
+                     HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"
+                     Minimum="0" Maximum="100" IsIndeterminate="True"/>
 
         <TextBlock Text="{Binding ErrorMsg}" TextWrapping="WrapWithOverflow" Foreground="Red" Grid.Row="1" Grid.Column="1"/>
     </Grid>

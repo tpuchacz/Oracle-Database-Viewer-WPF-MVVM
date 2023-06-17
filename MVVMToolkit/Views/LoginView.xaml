@@ -7,7 +7,7 @@
              xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300" Width="300" Height="300">
+             Width="1280" Height="720" FontSize="40">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,24 +20,37 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Viewbox Stretch="Uniform" Grid.Column="1" Grid.Row="1">
-            <StackPanel Width="120">
-                <TextBlock Text="Zaloguj się" HorizontalAlignment="Center" Margin="0,0,0,10"
-                           Foreground="White" FontWeight="Black"/>
-                <TextBox Text="{Binding Login}" Margin="0,0,0,10"/>
-                <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Margin="0,0,0,10"/>
-                <Button Content="Login" Command="{Binding ClickCommand}" Margin="0,0,0,10"/>
-            </StackPanel>
-        </Viewbox>
-        <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" FontSize="12" Grid.Row="2" Grid.ColumnSpan="3"
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1.5*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Zaloguj się" HorizontalAlignment="Center" Margin="0,0,0,10"
+                           Foreground="White" FontWeight="Black" Grid.Row="1" Grid.Column="1"/>
+            <TextBox Text="{Binding Login}" Margin="0,0,0,10" Grid.Row="2" Grid.Column="1" FontSize="40"/>
+            <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Margin="0,0,0,10"
+                         Grid.Row="3" Grid.Column="1" FontSize="40"/>
+            <Button Content="Login" Command="{Binding ClickCommand}" Margin="0,0,0,10"
+                        IsDefault="True" Grid.Row="4" Grid.Column="1" FontSize="30"/>
+        </Grid>
+        <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" FontSize="12" Grid.Row="2" Grid.Column="1"
                    TextWrapping="WrapWithOverflow" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

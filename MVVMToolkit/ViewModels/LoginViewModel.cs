@@ -43,7 +43,7 @@ public partial class LoginViewModel : BaseViewModel
     private string? _errorMsg;
 
     [RelayCommand(CanExecute = nameof(CanClick))]
-    private void Click()
+    private async void Click()
     {
         if(SecurePassword != null)
         {
