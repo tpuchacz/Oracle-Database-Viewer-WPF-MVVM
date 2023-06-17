@@ -1,1 +1,1 @@
-Student project ¯\_(ツ)_/¯
+Student project ¯\\_(ツ)_/¯
