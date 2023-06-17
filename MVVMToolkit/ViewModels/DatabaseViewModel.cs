@@ -24,6 +24,20 @@ namespace MVVMToolkit.ViewModels;
 
 public partial class DatabaseViewModel : BaseViewModel
 {
+    private readonly IDatabaseConnectionService _databaseConnectionService;
+
+    public DatabaseViewModel(DatabaseModel databaseModel, IDatabaseConnectionService databaseConnectionService)
+    {
+        DbModel = databaseModel;
+        _databaseConnectionService = databaseConnectionService;
+        using(BackgroundWorker bgw = new BackgroundWorker())
+        {
+            bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
+            bgw.DoWork += LoadTables;
+            bgw.RunWorkerAsync();
+        }
+    }
+
     [ObservableProperty]
     private string? _errorMsg;
 
@@ -42,24 +56,14 @@ public partial class DatabaseViewModel : BaseViewModel
     [ObservableProperty]
     private string _isProgressBarHidden = "Visible";
 
-    private readonly IDatabaseConnectionService _databaseConnectionService;
-
-    public DatabaseViewModel(DatabaseModel databaseModel, IDatabaseConnectionService databaseConnectionService)
-    {
-        DbModel = databaseModel;
-        _databaseConnectionService = databaseConnectionService;
-        using(BackgroundWorker bgw = new BackgroundWorker())
-        {
-            bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
-            bgw.DoWork += LoadTables;
-            bgw.RunWorkerAsync();
-        }
-    }
+    [ObservableProperty]
+    private bool _isEnabled = false;
 
     private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
         IsDataGridHidden = "Visible";
         IsProgressBarHidden = "Hidden";
+        IsEnabled = true;
     }
 
     private void LoadTables(object? sender, DoWorkEventArgs e)

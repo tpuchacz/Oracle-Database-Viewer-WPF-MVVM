@@ -13,6 +13,8 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using MVVMToolkit.Services;
 using MVVMToolkit.ViewModels;
 using MVVMToolkit;
+using Microsoft.Extensions.Hosting;
+using System.ComponentModel;
 
 namespace MVVMToolkit.ViewModels;
 public partial class LoginViewModel : BaseViewModel
@@ -35,12 +37,15 @@ public partial class LoginViewModel : BaseViewModel
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
-    private string? _login = "msbd11";
+    private string? _login = "";
 
     public SecureString? SecurePassword { get; set; }
 
     [ObservableProperty]
     private string? _errorMsg;
+
+    [ObservableProperty]
+    private string _progressVisibility = "Hidden";
 
     [RelayCommand(CanExecute = nameof(CanClick))]
     private async void Click()
@@ -54,15 +59,14 @@ public partial class LoginViewModel : BaseViewModel
 
             OracleCredential cred = new OracleCredential(Login, SecurePassword);
 
-            if (_databaseConnectionService.CheckCredentials(connStr, cred))
+            using(BackgroundWorker bgw = new BackgroundWorker())
             {
-                IMessenger messenger = Messenger;
-                messenger.Send("change"); //Zmiana widoku poprzez wysłanie go do MainWindowViewModel
-                SecurePassword.Dispose();
-            }
-            else
-            {
-                ErrorMsg = "Logowanie nieudane. Sprawdź dane";
+                List<object> arguments = new List<object>();
+                arguments.Add(connStr);
+                arguments.Add(cred);
+                bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
+                bgw.DoWork += Bgw_DoWork;
+                bgw.RunWorkerAsync(arguments);
             }
         }
         else
@@ -70,6 +74,28 @@ public partial class LoginViewModel : BaseViewModel
             ErrorMsg = "Podaj hasło";
         }
     }
+
+    private void Bgw_DoWork(object? sender, DoWorkEventArgs e)
+    {
+        ProgressVisibility = "Visible";
+        List<object> list = (List<object>)e.Argument;
+        if (_databaseConnectionService.CheckCredentials((string)list.ElementAt(0), (OracleCredential)list.ElementAt(1)))
+        {
+            IMessenger messenger = Messenger;
+            messenger.Send("change"); //Zmiana widoku poprzez wysłanie go do MainWindowViewModel
+            SecurePassword.Dispose();
+        }
+        else
+        {
+            ErrorMsg = "Logowanie nieudane. Sprawdź dane";
+        }
+    }
+
+    private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+    {
+        ProgressVisibility = "Hidden";
+    }
+
     //Sprawdzenie czy SecurePassword jest puste jest problematyczne
     //w ten sposób, więc na ten moment sprawdzam tylko Login
     private bool CanClick()
