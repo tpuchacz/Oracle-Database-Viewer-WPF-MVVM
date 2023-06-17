@@ -13,12 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MVVMToolkit;
 using MahApps.Metro.Controls;
 
 namespace MVVMToolkit.Views;
-
-//Tylko kod dotyczący widoku
 public partial class MainWindow : MetroWindow
 {
     public MainWindow()

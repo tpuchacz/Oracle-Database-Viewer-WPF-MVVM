@@ -20,6 +20,9 @@ namespace MVVMToolkit.Services;
 
 public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseConnectionService
 {
+    //All connections are in using statement - Dispose method is automatically invoked
+
+    //Credentials get set after connection is established for the first time
     private string? _connectionString;
     private OracleCredential? _credential;
     private List<OracleDataAdapter> _adapters = new List<OracleDataAdapter>();
@@ -30,6 +33,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
         set { _adapters = value; }
     }
 
+    //Simple check if credentials are correct by connecting to the DB
     public bool CheckCredentials(string connectionString, OracleCredential credential)
     {
         using (OracleConnection connection = new OracleConnection(connectionString, credential))
@@ -48,6 +52,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
         }
     }
 
+    //Getting a list of all table names
     public List<string> GetTables()
     {
         List<string> tableNames;
@@ -72,11 +77,13 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
         return tableNames;
     }
 
+    //Filling the tables with data; preserving adapters for later;
+    //building update commands(had issues with building them later)
     public List<DataTable> FillTables(List<string> tableNames)
     {
         OracleDataAdapter adapter;
         List<DataTable> _dataTables;
-        DataSet _ds;
+        DataSet _ds; //Couldn't bind without DataSet
         DataTable _dt;
         using (OracleConnection connection = new OracleConnection(_connectionString, _credential))
         {
@@ -90,7 +97,8 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
                 string cmdString = $"select * from {tableNames.ElementAt(i)}";
                 adapter = new OracleDataAdapter(cmdString, connection);
                 OracleCommandBuilder builder = new OracleCommandBuilder(adapter);
-                builder.ConflictOption = ConflictOption.OverwriteChanges;
+                //There was an exception thrown while updating data with a DataGrid error. Lower line seems to fix it
+                builder.ConflictOption = ConflictOption.OverwriteChanges; 
                 adapter.Fill(_dt);
                 var cols = new DataColumn[_dt.Columns.Count];
                 for(int j = 0; j < cols.Length; j++)
@@ -98,7 +106,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
                     if (!_dt.Columns[j].AllowDBNull)
                         cols[j] = _dt.Columns[j];
                 }
-                _dt.PrimaryKey = cols;
+                _dt.PrimaryKey = cols; //Could be done better by also checking which columns are Primary Key
                 _dataTables.Add(_dt);
                 adapter.InsertCommand = builder.GetInsertCommand();
                 try
@@ -122,6 +130,7 @@ public partial class DatabaseConnectionService : ObservableRecipient, IDatabaseC
         {
             connection.Open();
             Adapters.ElementAt(index).AcceptChangesDuringUpdate = true;
+            //Updating connection; previous one disposed
             Adapters.ElementAt(index).InsertCommand.Connection = connection;
             Adapters.ElementAt(index).UpdateCommand.Connection = connection;
             Adapters.ElementAt(index).DeleteCommand.Connection = connection;

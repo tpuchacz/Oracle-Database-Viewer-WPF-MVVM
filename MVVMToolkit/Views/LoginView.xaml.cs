@@ -22,6 +22,7 @@ public partial class LoginView : UserControl
     {
         InitializeComponent();
     }
+
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
     {
         if (this.DataContext != null)
@@ -29,4 +30,6 @@ public partial class LoginView : UserControl
             ((dynamic)this.DataContext).SecurePassword = ((PasswordBox)sender).SecurePassword;
         }
     }
+
+    //https://stackoverflow.com/questions/1483892/how-to-bind-to-a-passwordbox-in-mvvm
 }

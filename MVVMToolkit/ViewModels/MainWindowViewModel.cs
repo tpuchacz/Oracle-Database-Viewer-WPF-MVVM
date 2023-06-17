@@ -32,16 +32,14 @@ public partial class MainWindowViewModel : BaseViewModel, IRecipient<string>
     public MainWindowViewModel(INavigationService navigationService)
     {
         Navigation = navigationService;
-        Navigation.NavigateTo<LoginViewModel>();
+        Navigation.NavigateTo<LoginViewModel>(); //First view shown - LoginView
         IMessenger messenger = Messenger;
-        messenger.Register<string>(this);
+        messenger.Register<string>(this); //This message will inform MainWindowWievModel to change the view to DatabaseView
     }
 
     public void Receive(string message)
     {
         if (message.Equals("change"))
-        {
             Navigation.NavigateTo<DatabaseViewModel>();
-        }
     }
 }

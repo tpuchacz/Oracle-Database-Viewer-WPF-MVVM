@@ -26,7 +26,7 @@ public partial class LoginViewModel : BaseViewModel
         _databaseConnectionService = databaseConnectionService;
     }
 
-    //Adres IP hosta, port oraz SID będzie można wybrać w jakimś menu logowania
+    //Implement being able to change hostname/sid
     [ObservableProperty]
     private string? _hostname = "155.158.112.45";
 
@@ -39,7 +39,9 @@ public partial class LoginViewModel : BaseViewModel
     [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
     private string? _login = "";
 
-    public SecureString? SecurePassword { get; set; }
+    public SecureString? SecurePassword { get; set; } //Password is encrypted in a SecureString, not converted to string
+                                                      //Implementation in code-behind
+                                                      //https://stackoverflow.com/questions/1483892/how-to-bind-to-a-passwordbox-in-mvvm
 
     [ObservableProperty]
     private string? _errorMsg;
@@ -68,7 +70,7 @@ public partial class LoginViewModel : BaseViewModel
                 };
                 bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
                 bgw.DoWork += Bgw_DoWork;
-                bgw.RunWorkerAsync(arguments);
+                bgw.RunWorkerAsync(arguments); //Passing credentials as parameter
             }
         }
         else
@@ -77,14 +79,17 @@ public partial class LoginViewModel : BaseViewModel
         }
     }
 
+    private bool CanClick()
+    => !string.IsNullOrWhiteSpace(Login);
+
     private void Bgw_DoWork(object? sender, DoWorkEventArgs e)
     {
         ProgressVisibility = "Visible";
-        List<object> list = e.Argument as List<object>;
+        List<object> list = e.Argument as List<object>; //Retrieving credentials from args
         if (_databaseConnectionService.CheckCredentials((string)list.ElementAt(0), (OracleCredential)list.ElementAt(1)))
         {
             IMessenger messenger = Messenger;
-            messenger.Send("change"); //Zmiana widoku poprzez wysłanie go do MainWindowViewModel
+            messenger.Send("change"); //Letting MainWindowViewModel know to change view
             if(SecurePassword != null)
                 SecurePassword.Dispose();
         }
@@ -96,7 +101,4 @@ public partial class LoginViewModel : BaseViewModel
     {
         ProgressVisibility = "Hidden";
     }
-
-    private bool CanClick()
-        => !string.IsNullOrWhiteSpace(Login);
 }

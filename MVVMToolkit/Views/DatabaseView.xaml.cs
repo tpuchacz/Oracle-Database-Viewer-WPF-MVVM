@@ -17,10 +17,6 @@ using System.Windows.Shapes;
 using MVVMToolkit;
 
 namespace MVVMToolkit.Views;
-
-/// <summary>
-/// Logika interakcji dla klasy DatabaseView.xaml
-/// </summary>
 public partial class DatabaseView : UserControl
 {
     public DatabaseView()
@@ -28,7 +24,7 @@ public partial class DatabaseView : UserControl
         InitializeComponent();
     }
 
-    //Wymagane dla wprowadzania pustych wartości
+    //Required if you want to enter null values
     private void oracleData_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
     {
         ((DataGridBoundColumn)e.Column).Binding.TargetNullValue = string.Empty;

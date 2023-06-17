@@ -11,4 +11,5 @@ namespace MVVMToolkit.ViewModels;
 
 public abstract partial class BaseViewModel : ObservableRecipient
 {
+    //Needed for changing UserControls
 }

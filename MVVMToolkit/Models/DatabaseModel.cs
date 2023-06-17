@@ -10,7 +10,6 @@ namespace MVVMToolkit.Models;
 
 public partial class DatabaseModel : ObservableRecipient
 {
-
     private List<DataTable> _tableList;
     public List<DataTable> TableList
     {

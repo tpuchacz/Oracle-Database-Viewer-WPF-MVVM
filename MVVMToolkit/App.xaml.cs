@@ -22,6 +22,7 @@ public partial class App : Application
 
     public App()
     {
+        //Dependency Injection set up using Microsoft.Extensions.DependencyInjection nugget package
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((hostContext, services) =>
             {

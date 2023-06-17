@@ -35,6 +35,7 @@ public partial class DatabaseViewModel : BaseViewModel
     {
         DbModel = databaseModel;
         _databaseConnectionService = databaseConnectionService;
+        //Loading data into tables in the background
         using(BackgroundWorker bgw = new BackgroundWorker())
         {
             bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
@@ -88,10 +89,13 @@ public partial class DatabaseViewModel : BaseViewModel
     [RelayCommand]
     public void AcceptChanges()
     {
-        //Zaimplementować jakieś potwierdzenie
+        
+        //Implement some sort of confirmation
+
         ErrorMsg = "";
-        DataTable? x = DbModel.SelectedTable.GetChanges();
-        if (x != null)
+        //Checking for changes
+        DataTable? changed = DbModel.SelectedTable.GetChanges();
+        if (changed != null)
         {
             try
             {
@@ -112,18 +116,20 @@ public partial class DatabaseViewModel : BaseViewModel
     public void AddRow()
     {
         DataRow dr = DbModel.SelectedTable.NewRow();
+        //This if might be unnecessary
         if(DbModel.SelectedTable.PrimaryKey != null)
         {
             if (DbModel.SelectedTable.Columns[0].DataType == typeof(Int16)
                 || DbModel.SelectedTable.Columns[0].DataType == typeof(Int32)
-                || DbModel.SelectedTable.Columns[0].DataType == typeof(Int64))
+                || DbModel.SelectedTable.Columns[0].DataType == typeof(Int64)) //The ID field might be different types of int/other, sticking to int for now
             {
                 try
                 {
+                    //Finding maximum ID value and incrementing
                     int maxID = Convert.ToInt32(DbModel.SelectedTable.Compute($"max([{DbModel.SelectedTable.Columns[0]}])", string.Empty));
                     dr[0] = maxID + 1;
                 }
-                catch (InvalidCastException ex) { }
+                catch (InvalidCastException ex) { } //Mostly in case there are no IDs
             }
         }
         DbModel.SelectedTable.Rows.Add(dr);
@@ -133,6 +139,7 @@ public partial class DatabaseViewModel : BaseViewModel
     [RelayCommand]
     public void Search()
     {
+        //Filtering results in current table
         ErrorMsg = "";
         if (!SearchBox.Equals(string.Empty))
         {
@@ -150,6 +157,7 @@ public partial class DatabaseViewModel : BaseViewModel
 
     partial void OnSearchBoxChanged(string? oldValue, string? newValue)
     {
+        //Clearing search filter if search field empty
         if (newValue.Equals(string.Empty))
             SearchCommand.Execute(null);
     }
