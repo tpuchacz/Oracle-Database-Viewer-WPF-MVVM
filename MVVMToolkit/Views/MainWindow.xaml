@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVMToolkit"
         xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels"
+        xmlns:tools="clr-namespace:MVVMToolkit.Tools"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        FontSize="12" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen"
+        FontSize="12" WindowStartupLocation="CenterScreen"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
-        Title="Oracle Database Viewer" SizeToContent="WidthAndHeight" MaxHeight="1080" MaxWidth="1920">
+        Title="Oracle Database Viewer" SizeToContent="WidthAndHeight" 
+        ResizeMode="NoResize">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,6 +21,6 @@
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
     <Grid>
-        <ContentControl Content="{Binding Navigation.CurrentView}" />
+        <ContentControl Content="{Binding Navigation.CurrentView}"/>
     </Grid>
 </mah:MetroWindow>

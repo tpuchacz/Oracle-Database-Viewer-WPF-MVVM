@@ -22,4 +22,16 @@ public partial class MainWindow : MetroWindow
     {
         InitializeComponent();
     }
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+    {
+        //Repositioning window after resizing
+        //Taken from https://stackoverflow.com/questions/16455931/keep-window-centered-after-sizetocontent-smoothly
+        base.OnRenderSizeChanged(sizeInfo);
+
+        if (sizeInfo.HeightChanged)
+            this.Top += (sizeInfo.PreviousSize.Height - sizeInfo.NewSize.Height) / 2;
+
+        if (sizeInfo.WidthChanged)
+            this.Left += (sizeInfo.PreviousSize.Width - sizeInfo.NewSize.Width) / 2;
+    }
 }

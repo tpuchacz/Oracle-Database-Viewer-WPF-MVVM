@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MVVMToolkit"
+             xmlns:tools="clr-namespace:MVVMToolkit.Tools"
              xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
              Dialog:DialogParticipation.Register="{Binding}"
              xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
-             Width="1280" Height="720" FontSize="40" MinHeight="720" MinWidth="1280">
+             Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools:ScreenRatioConverter}, ConverterParameter='0.4'}" 
+             Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools:ScreenRatioConverter}, ConverterParameter='0.25'}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,7 +24,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -33,44 +35,37 @@
         <mah:FlyoutsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                             Grid.RowSpan="7" Panel.ZIndex="100">
             <mah:Flyout IsOpen="{Binding FlyoutOpen}" Header="Podaj nowe parametry połączenia"
-                        Position="Left" Width="auto">
+                        Position="Left" Width="auto" mah:HeaderedControlHelper.HeaderFontSize="16">
                 <StackPanel HorizontalAlignment="Left" Margin="10,0,0,0">
                     <TextBlock Text="Hostname" FontSize="20" Margin="0,0,0,10"/>
-                    <TextBox Text="{Binding Hostname, Mode=TwoWay}" Margin="0,0,0,10"/>
+                    <TextBox Text="{Binding Hostname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
                     <TextBlock Text="SID" FontSize="20" Margin="0,0,0,10"/>
-                    <TextBox Text="{Binding Sid, Mode=TwoWay}"/>
+                    <TextBox Text="{Binding Sid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Port" FontSize="20" Margin="0,0,0,10"/>
-                    <TextBox Text="{Binding Port, Mode=TwoWay}"/>
+                    <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </mah:Flyout>
         </mah:FlyoutsControl>
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="1.5*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="1" Grid.Row="1" Margin="10" VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch" Height="auto" Width="auto">
             <TextBlock Text="Zaloguj się" HorizontalAlignment="Center" Margin="0,0,0,10"
-                           Foreground="White" FontWeight="Black" Grid.Row="1" Grid.Column="1"/>
-            <TextBox Text="{Binding Login}" Margin="0,0,0,10" Grid.Row="2" Grid.Column="1" FontSize="40"/>
+                       Foreground="White" FontWeight="Black" DockPanel.Dock="Top"
+                       Height="auto" FontSize="24"/>
+            <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"  DockPanel.Dock="Top"
+                     Height="auto" FontSize="24"/>
             <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Margin="0,0,0,10"
-                         Grid.Row="3" Grid.Column="1" FontSize="40"/>
+                         DockPanel.Dock="Top" Height="auto" FontSize="24"/>
             <Button Content="Login" Command="{Binding ClickCommand}" Margin="0,0,0,10"
-                        IsDefault="True" Grid.Row="4" Grid.Column="1" FontSize="30"/>
-            <ProgressBar IsIndeterminate="True" Grid.Row="5" Grid.Column="1" Visibility="{Binding ProgressVisibility}"/>
-        </Grid>
+                        IsDefault="True"  DockPanel.Dock="Top" Height="auto" FontSize="24"/>
+            <ProgressBar IsIndeterminate="True" Visibility="{Binding ProgressVisibility}"
+                         VerticalAlignment="Top"/>
+        </DockPanel>
         <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" FontSize="16" Grid.Row="2" Grid.Column="1"
                    TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Button Content="Połączenie" Command="{Binding ChangeConnectionDataCommand}"
-                    Grid.Row="0" Grid.Column="0" Margin="10" FontSize="13"/>
+        <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="0">
+            <Button Content="Połączenie" Command="{Binding ChangeConnectionDataCommand}"
+                    Margin="5,0,5,0" FontSize="16"/>
+        </Viewbox>
+        
     </Grid>
 </UserControl>

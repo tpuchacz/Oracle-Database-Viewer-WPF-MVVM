@@ -30,13 +30,16 @@ public partial class LoginViewModel : BaseViewModel
 
     //Implement being able to change hostname/sid
     [ObservableProperty]
-    private string? _hostname = "155.158.112.45";
+    [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
+    private string? _hostname = "";
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
     private string? _sid = "";
 
     [ObservableProperty]
-    private string? _port = "1521";
+    [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
+    private string? _port = "";
 
     private string? connStr;
 
@@ -87,7 +90,8 @@ public partial class LoginViewModel : BaseViewModel
     }
 
     private bool CanClick()
-    => !string.IsNullOrWhiteSpace(Login);
+    => !string.IsNullOrWhiteSpace(Login) && !string.IsNullOrWhiteSpace(Hostname)
+    && !string.IsNullOrWhiteSpace(Port) && !string.IsNullOrWhiteSpace(Sid);
 
     [RelayCommand]
     private void ChangeConnectionData()

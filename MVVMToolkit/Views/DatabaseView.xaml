@@ -4,10 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="White"
              xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels" FontSize="12"
+             xmlns:tools="clr-namespace:MVVMToolkit.Tools"
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
              Dialog:DialogParticipation.Register="{Binding}"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:DatabaseViewModel}"
-             Width="1280" Height="720" MinHeight="720" MinWidth="1280">
+             Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools:ScreenRatioConverter}, ConverterParameter='0.8'}" 
+             Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools:ScreenRatioConverter}, ConverterParameter='0.8'}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -41,13 +43,13 @@
             <ComboBox ItemsSource="{Binding DbModel.TableNames, IsAsync=True}"  FontSize="14"
                       SelectedIndex="{Binding DbModel.SelectedIndex, Mode=TwoWay}" Margin="10,0,10,0"
                       IsSynchronizedWithCurrentItem="True" Grid.Column="0" Grid.Row="1"
-                      IsEnabled="{Binding IsEnabled}"/>
+                      IsEnabled="{Binding IsInteractionEnabled}"/>
             <TextBlock Text="Wyszukaj:" FontSize="18" FontWeight="Bold" Margin="0,20,0,0"
                        TextAlignment="Center" Grid.Column="0" Grid.Row="2"/>
             <TextBox Margin="10,5,10,5" Text="{Binding SearchBox, UpdateSourceTrigger=PropertyChanged}"
                      Grid.Column="0" Grid.Row="3"/>
             <Button Content="Szukaj" Command="{Binding SearchCommand}" Margin="10,0,10,0"
-                    Grid.Column="0" Grid.Row="4" IsEnabled="{Binding IsEnabled}"/>
+                    Grid.Column="0" Grid.Row="4" IsEnabled="{Binding IsInteractionEnabled}"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,10">
@@ -57,11 +59,11 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Button Command="{Binding AddRowCommand}" Content="Dodaj rekord" Margin="0,20,0,0"
-                    Grid.Row="0" IsEnabled="{Binding IsEnabled}"/>
+                    Grid.Row="0" IsEnabled="{Binding IsInteractionEnabled}"/>
             <Button Command="{Binding AcceptChangesCommand}" Content="Zatwierdz zmiany" Margin="0,10,0,0"
-                    Grid.Row="1" IsEnabled="{Binding IsEnabled}"/>
+                    Grid.Row="1" IsEnabled="{Binding IsInteractionEnabled}"/>
             <Button Command="{Binding RejectChangesCommand}" Content="Cofnij zmiany" Margin="0,10,0,20"
-                    Grid.Row="2" IsEnabled="{Binding IsEnabled}"/>
+                    Grid.Row="2" IsEnabled="{Binding IsInteractionEnabled}"/>
         </Grid>
 
         <DataGrid ItemsSource="{Binding DbModel.SelectedTable, Mode=OneWay, IsAsync=True}" x:Name="oracleData"
@@ -78,6 +80,7 @@
                      HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"
                      Minimum="0" Maximum="100" IsIndeterminate="True"/>
 
-        <TextBlock Text="{Binding ErrorMsg}" TextWrapping="WrapWithOverflow" Foreground="Red" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="{Binding ErrorMsg}" TextWrapping="WrapWithOverflow" Foreground="Red"
+                   Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </UserControl>

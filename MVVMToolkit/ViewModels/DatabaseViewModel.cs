@@ -32,7 +32,7 @@ public partial class DatabaseViewModel : BaseViewModel
 {
     private readonly IDatabaseConnectionService _databaseConnectionService;
 
-    private IDialogCoordinator _dialogCoordinator;
+    private IDialogCoordinator _dialogCoordinator; //From MahApps
 
     public DatabaseViewModel(DatabaseModel databaseModel, IDatabaseConnectionService databaseConnectionService, IDialogCoordinator instance)
     {
@@ -49,16 +49,13 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [ObservableProperty]
-    private string? _errorMsg;
+    private string? _errorMsg = "";
 
     [ObservableProperty]
-    private string? _searchBox;
+    private string? _searchBox = "";
 
     [ObservableProperty]
     private DatabaseModel _dbModel;
-
-    [ObservableProperty]
-    private int _progress = 0;
 
     [ObservableProperty]
     private string _isDataGridHidden = "Hidden";
@@ -67,13 +64,13 @@ public partial class DatabaseViewModel : BaseViewModel
     private string _isProgressBarHidden = "Visible";
 
     [ObservableProperty]
-    private bool _isEnabled = false;
+    private bool _isInteractionEnabled = false; //While data loading block all interaction; binded to buttons etc.
 
     private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
         IsDataGridHidden = "Visible";
         IsProgressBarHidden = "Hidden";
-        IsEnabled = true;
+        IsInteractionEnabled = true;
     }
 
     private void LoadTables(object? sender, DoWorkEventArgs e)
@@ -128,7 +125,7 @@ public partial class DatabaseViewModel : BaseViewModel
     public void AddRow()
     {
         DataRow dr = DbModel.SelectedTable.NewRow();
-        //This if might be unnecessary
+        //Checking PrimaryKey probably unnecessary
         if(DbModel.SelectedTable.PrimaryKey != null)
         {
             if (DbModel.SelectedTable.Columns[0].DataType == typeof(Int16)

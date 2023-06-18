@@ -24,7 +24,7 @@ public partial class DatabaseView : UserControl
         InitializeComponent();
     }
 
-    //Required if you want to enter null values
+    //Required if you want to enter null values, obviously not every field must have a value in a database
     private void oracleData_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
     {
         ((DataGridBoundColumn)e.Column).Binding.TargetNullValue = string.Empty;
