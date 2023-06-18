@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="White"
              xmlns:viewModels="clr-namespace:MVVMToolkit.ViewModels" FontSize="12"
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding}"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModels:DatabaseViewModel}"
              Width="1280" Height="720" MinHeight="720" MinWidth="1280">
     <UserControl.Resources>
@@ -40,7 +42,7 @@
                       SelectedIndex="{Binding DbModel.SelectedIndex, Mode=TwoWay}" Margin="10,0,10,0"
                       IsSynchronizedWithCurrentItem="True" Grid.Column="0" Grid.Row="1"
                       IsEnabled="{Binding IsEnabled}"/>
-            <TextBlock Text="Wyszukaj:" FontSize="18" FontWeight="Bold" Margin="0,50,0,0"
+            <TextBlock Text="Wyszukaj:" FontSize="18" FontWeight="Bold" Margin="0,20,0,0"
                        TextAlignment="Center" Grid.Column="0" Grid.Row="2"/>
             <TextBox Margin="10,5,10,5" Text="{Binding SearchBox, UpdateSourceTrigger=PropertyChanged}"
                      Grid.Column="0" Grid.Row="3"/>

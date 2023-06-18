@@ -15,6 +15,8 @@ using MVVMToolkit.ViewModels;
 using MVVMToolkit;
 using Microsoft.Extensions.Hosting;
 using System.ComponentModel;
+using MahApps.Metro.Controls.Dialogs;
+using System.Windows.Automation;
 
 namespace MVVMToolkit.ViewModels;
 public partial class LoginViewModel : BaseViewModel
@@ -31,7 +33,10 @@ public partial class LoginViewModel : BaseViewModel
     private string? _hostname = "155.158.112.45";
 
     [ObservableProperty]
-    private string? _sid = "oltpstud";
+    private string? _sid = "";
+
+    [ObservableProperty]
+    private string? _port = "1521";
 
     private string? connStr;
 
@@ -42,22 +47,24 @@ public partial class LoginViewModel : BaseViewModel
     public SecureString? SecurePassword { get; set; } //Password is encrypted in a SecureString, not converted to string
                                                       //Implementation in code-behind
                                                       //https://stackoverflow.com/questions/1483892/how-to-bind-to-a-passwordbox-in-mvvm
-
     [ObservableProperty]
     private string? _errorMsg;
 
     [ObservableProperty]
     private string _progressVisibility = "Hidden";
 
+    [ObservableProperty]
+    private bool _flyoutOpen = false;
+
     [RelayCommand(CanExecute = nameof(CanClick))]
     private void Click()
     {
-        if(SecurePassword != null)
+        if (SecurePassword != null)
         {
             SecurePassword.MakeReadOnly();
 
             connStr = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)" +
-                      $"(Host={ Hostname })(Port=1521)))(CONNECT_DATA=(SERVICE_NAME={ Sid })));";
+                      $"(Host={ Hostname })(Port={ Port })))(CONNECT_DATA=(SERVICE_NAME={ Sid })));";
 
             OracleCredential cred = new OracleCredential(Login, SecurePassword);
 
@@ -81,6 +88,12 @@ public partial class LoginViewModel : BaseViewModel
 
     private bool CanClick()
     => !string.IsNullOrWhiteSpace(Login);
+
+    [RelayCommand]
+    private void ChangeConnectionData()
+    {
+        FlyoutOpen = true;
+    }
 
     private void Bgw_DoWork(object? sender, DoWorkEventArgs e)
     {

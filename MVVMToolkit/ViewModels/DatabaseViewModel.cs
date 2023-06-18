@@ -24,6 +24,7 @@ using ControlzEx.Standard;
 using System.Drawing;
 using System.Windows.Controls;
 using System.Windows;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace MVVMToolkit.ViewModels;
 
@@ -31,12 +32,15 @@ public partial class DatabaseViewModel : BaseViewModel
 {
     private readonly IDatabaseConnectionService _databaseConnectionService;
 
-    public DatabaseViewModel(DatabaseModel databaseModel, IDatabaseConnectionService databaseConnectionService)
+    private IDialogCoordinator _dialogCoordinator;
+
+    public DatabaseViewModel(DatabaseModel databaseModel, IDatabaseConnectionService databaseConnectionService, IDialogCoordinator instance)
     {
         DbModel = databaseModel;
         _databaseConnectionService = databaseConnectionService;
+        _dialogCoordinator = instance;
         //Loading data into tables in the background
-        using(BackgroundWorker bgw = new BackgroundWorker())
+        using (BackgroundWorker bgw = new BackgroundWorker())
         {
             bgw.RunWorkerCompleted += Bgw_RunWorkerCompleted;
             bgw.DoWork += LoadTables;
@@ -80,36 +84,44 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void RejectChanges()
+    public async void AcceptChanges()
     {
-        DbModel.SelectedTable.RejectChanges();
-        ErrorMsg = "";
-    }
-
-    [RelayCommand]
-    public void AcceptChanges()
-    {
-        
-        //Implement some sort of confirmation
-
         ErrorMsg = "";
         //Checking for changes
         DataTable? changed = DbModel.SelectedTable.GetChanges();
         if (changed != null)
         {
-            try
+            //Dialog Service from MahApps implemented with dependency injection
+            var result = await _dialogCoordinator.ShowMessageAsync(this, "Potwierdź zmiany", "Po kliknięciu OK zmiany zostaną zatwierdzone i wysłane do bazy danych.\n" +
+            "Czy chcesz kontynuować?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Affirmative)
             {
-                _databaseConnectionService.UpdateTable(DbModel.SelectedIndex, DbModel.SelectedTable);
-                DbModel.SelectedTable.AcceptChanges();
-                ErrorMsg = "Pomyślnie zatwierdzono zmiany!";
-            }
-            catch (OracleException ex)
-            {
-                ErrorMsg = ex.Message;
+                try
+                {
+                    _databaseConnectionService.UpdateTable(DbModel.SelectedIndex, DbModel.SelectedTable);
+                    DbModel.SelectedTable.AcceptChanges();
+                    ErrorMsg = "Pomyślnie zatwierdzono zmiany!";
+                }
+                catch (OracleException ex)
+                {
+                    ErrorMsg = ex.Message;
+                }
             }
         }
         else
             ErrorMsg = "Nie wprowadzono zmian";
+    }
+
+    [RelayCommand]
+    public async void RejectChanges()
+    {
+        var result = await _dialogCoordinator.ShowMessageAsync(this, "Cofnij zmiany", "Czy napewno chcesz cofnąć zmiany?",
+                                                               MessageDialogStyle.AffirmativeAndNegative);
+        if (result == MessageDialogResult.Affirmative)
+        {
+            DbModel.SelectedTable.RejectChanges();
+            ErrorMsg = "";
+        }
     }
 
     [RelayCommand]

@@ -13,6 +13,7 @@ using MVVMToolkit.Models;
 using MVVMToolkit.Services;
 using MVVMToolkit.ViewModels;
 using MVVMToolkit.Views;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace MVVMToolkit;
 
@@ -37,6 +38,7 @@ public partial class App : Application
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
                 services.AddSingleton<IDatabaseConnectionService, DatabaseConnectionService>();
+                services.AddSingleton<IDialogCoordinator, DialogCoordinator>();
             })
             .Build();
     }
