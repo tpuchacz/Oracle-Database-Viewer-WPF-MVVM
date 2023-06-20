@@ -32,22 +32,34 @@
             <RowDefinition Height="8*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <!--Connection settings in a flyout-->
         <mah:FlyoutsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                             Grid.RowSpan="7" Panel.ZIndex="100">
             <mah:Flyout IsOpen="{Binding FlyoutOpen}" Header="Podaj nowe parametry połączenia"
                         Position="Left" Width="auto" mah:HeaderedControlHelper.HeaderFontSize="16">
-                <StackPanel HorizontalAlignment="Left" Margin="10,0,0,0">
-                    <TextBlock Text="Hostname" FontSize="20" Margin="0,0,0,10"/>
-                    <TextBox Text="{Binding Hostname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
-                    <TextBlock Text="SID" FontSize="20" Margin="0,0,0,10"/>
-                    <TextBox Text="{Binding Sid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Text="Port" FontSize="20" Margin="0,0,0,10"/>
-                    <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
+                <DockPanel Margin="15">
+                    <TextBlock Text="Hostname" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding Hostname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,10" DockPanel.Dock="Top"/>
+                    <TextBlock Text="SID" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding Sid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             DockPanel.Dock="Top"/>
+                    <TextBlock Text="Port" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalAlignment="Top"/>
+                </DockPanel>
             </mah:Flyout>
         </mah:FlyoutsControl>
-        <DockPanel Grid.Column="1" Grid.Row="1" Margin="10" VerticalAlignment="Stretch"
-                   HorizontalAlignment="Stretch" Height="auto" Width="auto">
+        
+        <!--Button to show flyout-->
+        <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="0">
+            <Button Content="Połączenie" Command="{Binding ChangeConnectionDataCommand}"
+                    Margin="5,0,5,0" FontSize="16"/>
+        </Viewbox>
+
+        <!--Entering user info-->
+        <DockPanel Grid.Column="1" Grid.Row="1" Margin="10">
             <TextBlock Text="Zaloguj się" HorizontalAlignment="Center" Margin="0,0,0,10"
                        Foreground="White" FontWeight="Black" DockPanel.Dock="Top"
                        Height="auto" FontSize="24"/>
@@ -60,11 +72,10 @@
             <ProgressBar IsIndeterminate="True" Visibility="{Binding ProgressVisibility}"
                          VerticalAlignment="Top"/>
         </DockPanel>
-        <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" FontSize="16" Grid.Row="2" Grid.Column="1"
-                   TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="0">
-            <Button Content="Połączenie" Command="{Binding ChangeConnectionDataCommand}"
-                    Margin="5,0,5,0" FontSize="16"/>
+
+        <Viewbox Grid.Row="2" Stretch="Uniform" Grid.ColumnSpan="3" Margin="10,0,10,5">
+            <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" 
+                   TextWrapping="WrapWithOverflow" HorizontalAlignment="Center"/>
         </Viewbox>
         
     </Grid>

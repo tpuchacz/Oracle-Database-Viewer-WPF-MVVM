@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Windows.Controls;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
+using System.Windows.Data;
 
 namespace MVVMToolkit.ViewModels;
 
@@ -49,6 +50,9 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [ObservableProperty]
+    private int _selectedRowIndex = 0;
+
+    [ObservableProperty]
     private string? _errorMsg = "";
 
     [ObservableProperty]
@@ -68,16 +72,23 @@ public partial class DatabaseViewModel : BaseViewModel
 
     private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
-        IsDataGridHidden = "Visible";
         IsProgressBarHidden = "Hidden";
-        IsInteractionEnabled = true;
+        if (ErrorMsg.Equals(""))
+        {
+            IsDataGridHidden = "Visible";
+            IsInteractionEnabled = true;
+        }
     }
 
     private void LoadTables(object? sender, DoWorkEventArgs e)
     {
         DbModel.TableNames = _databaseConnectionService.GetTables();
         DbModel.TableList = _databaseConnectionService.FillTables(DbModel.TableNames);
-        DbModel.SelectedTable = DbModel.TableList.ElementAt(DbModel.SelectedIndex);
+        try { DbModel.SelectedTable = DbModel.TableList.ElementAt(DbModel.SelectedIndex); }
+        catch (Exception) { 
+            ErrorMsg = "Baza danych nie zawiera żadnych tabel!";
+        }
+        
     }
 
     [RelayCommand]
@@ -106,7 +117,7 @@ public partial class DatabaseViewModel : BaseViewModel
             }
         }
         else
-            ErrorMsg = "Nie wprowadzono zmian";
+            ErrorMsg = "Nie wprowadzono żadnych zmian!";
     }
 
     [RelayCommand]
@@ -143,6 +154,15 @@ public partial class DatabaseViewModel : BaseViewModel
         }
         DbModel.SelectedTable.Rows.Add(dr);
         ErrorMsg = "";
+    }
+
+    [RelayCommand]
+    public void DeleteRow()
+    {
+        //ICollectionView view = CollectionViewSource.GetDefaultView(DbModel.SelectedTable);
+        //view.MoveCurrentToFirst();
+        //DataRowView dr = view.CurrentItem as DataRowView;
+        //DbModel.SelectedTable.Rows.Remove(dr.Row);
     }
 
     [RelayCommand]

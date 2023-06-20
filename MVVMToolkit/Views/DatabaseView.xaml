@@ -30,57 +30,50 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Margin="10,0,10,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
+        <!--Choosing table, searchbox-->
+        <DockPanel Margin="10">
             <TextBlock Text="Wybierz tabele:" FontSize="18" FontWeight="Bold" Margin="0,5,0,0"
-                       TextAlignment="Center" Grid.Row="0"/>
+                       TextAlignment="Center" DockPanel.Dock="Top"/>
             <ComboBox ItemsSource="{Binding DbModel.TableNames, IsAsync=True}"  FontSize="14"
                       SelectedIndex="{Binding DbModel.SelectedIndex, Mode=TwoWay}" Margin="10,0,10,0"
-                      IsSynchronizedWithCurrentItem="True" Grid.Column="0" Grid.Row="1"
+                      IsSynchronizedWithCurrentItem="True" DockPanel.Dock="Top"
                       IsEnabled="{Binding IsInteractionEnabled}"/>
-            <TextBlock Text="Wyszukaj:" FontSize="18" FontWeight="Bold" Margin="0,20,0,0"
-                       TextAlignment="Center" Grid.Column="0" Grid.Row="2"/>
+            <TextBlock Text="Wyszukaj:" FontSize="18" FontWeight="Bold" Margin="0,10,0,0"
+                       TextAlignment="Center" DockPanel.Dock="Top"/>
             <TextBox Margin="10,5,10,5" Text="{Binding SearchBox, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Column="0" Grid.Row="3"/>
+                     DockPanel.Dock="Top"/>
             <Button Content="Szukaj" Command="{Binding SearchCommand}" Margin="10,0,10,0"
-                    Grid.Column="0" Grid.Row="4" IsEnabled="{Binding IsInteractionEnabled}"/>
-        </Grid>
-
-        <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Button Command="{Binding AddRowCommand}" Content="Dodaj rekord" Margin="0,20,0,0"
-                    Grid.Row="0" IsEnabled="{Binding IsInteractionEnabled}"/>
+                    IsEnabled="{Binding IsInteractionEnabled}" VerticalAlignment="Top"/>
+        </DockPanel>
+        
+        <!--Accept/revert changes, add row-->
+        <DockPanel Grid.Row="1" Margin="10">
+            <Button Command="{Binding AddRowCommand}" Content="Dodaj rekord" Margin="0,10,0,0"
+                        IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
             <Button Command="{Binding AcceptChangesCommand}" Content="Zatwierdz zmiany" Margin="0,10,0,0"
-                    Grid.Row="1" IsEnabled="{Binding IsInteractionEnabled}"/>
-            <Button Command="{Binding RejectChangesCommand}" Content="Cofnij zmiany" Margin="0,10,0,20"
-                    Grid.Row="2" IsEnabled="{Binding IsInteractionEnabled}"/>
-        </Grid>
+                        IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
+            <Button Command="{Binding RejectChangesCommand}" Content="Cofnij zmiany" Margin="0,10,0,0"
+                        IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
+            <Button Command="{Binding DeleteRowCommand}" Content="Usun rekord" Margin="0,10,0,0"
+                        IsEnabled="{Binding IsInteractionEnabled}" VerticalAlignment="Top"/>
+        </DockPanel>
 
+        <!--Displaying DB tables-->
         <DataGrid ItemsSource="{Binding DbModel.SelectedTable, Mode=OneWay, IsAsync=True}" x:Name="oracleData"
                   Grid.Column="1" Grid.Row="0" AutoGenerateColumns="True" CanUserAddRows="False"
                   CanUserDeleteRows="False" MaxWidth="4000" MaxHeight="2560" HeadersVisibility="Column"
-                  RowHeight="23" ScrollViewer.CanContentScroll="True" SelectionUnit="Cell"
+                  RowHeight="23" ScrollViewer.CanContentScroll="True" SelectionUnit="CellOrRowHeader"
                   RowHeaderWidth="0" EnableColumnVirtualization="True" Margin="0,10,10,0"
                   EnableRowVirtualization="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                   VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
                   AutoGeneratingColumn="oracleData_AutoGeneratingColumn" Visibility="{Binding IsDataGridHidden}"
-                  GridLinesVisibility="All"/>
+                  GridLinesVisibility="All" />
 
         <ProgressBar Grid.Row="0" Grid.Column="1" Visibility="{Binding IsProgressBarHidden}"
                      HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30"
                      Minimum="0" Maximum="100" IsIndeterminate="True"/>
 
         <TextBlock Text="{Binding ErrorMsg}" TextWrapping="WrapWithOverflow" Foreground="Red"
-                   Grid.Row="1" Grid.Column="1"/>
+                   Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="10" FontSize="20"/>
     </Grid>
 </UserControl>

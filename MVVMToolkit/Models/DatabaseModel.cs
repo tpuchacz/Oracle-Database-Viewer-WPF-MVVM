@@ -5,6 +5,7 @@ using System.Linq;
 using MVVMToolkit;
 using MVVMToolkit.Services;
 using Oracle.ManagedDataAccess.Client;
+using System.ComponentModel;
 
 namespace MVVMToolkit.Models;
 

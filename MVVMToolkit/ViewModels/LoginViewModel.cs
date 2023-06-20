@@ -28,7 +28,6 @@ public partial class LoginViewModel : BaseViewModel
         _databaseConnectionService = databaseConnectionService;
     }
 
-    //Implement being able to change hostname/sid
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
     private string? _hostname = "";
@@ -62,16 +61,16 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand(CanExecute = nameof(CanClick))]
     private void Click()
     {
-        if (SecurePassword != null)
+        if (SecurePassword != null && SecurePassword.Length != 0)
         {
             SecurePassword.MakeReadOnly();
 
             connStr = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)" +
-                      $"(Host={ Hostname })(Port={ Port })))(CONNECT_DATA=(SERVICE_NAME={ Sid })));";
+                      $"(Host={Hostname})(Port={Port})))(CONNECT_DATA=(SERVICE_NAME={Sid})));";
 
             OracleCredential cred = new OracleCredential(Login, SecurePassword);
 
-            using(BackgroundWorker bgw = new BackgroundWorker())
+            using (BackgroundWorker bgw = new BackgroundWorker())
             {
                 List<object> arguments = new List<object>
                 {
@@ -84,9 +83,7 @@ public partial class LoginViewModel : BaseViewModel
             }
         }
         else
-        {
-            ErrorMsg = "Podaj hasło";
-        }
+            ErrorMsg = "Proszę podać hasło.";
     }
 
     private bool CanClick()
@@ -111,7 +108,7 @@ public partial class LoginViewModel : BaseViewModel
                 SecurePassword.Dispose();
         }
         else
-            ErrorMsg = "Logowanie nieudane. Sprawdź dane";
+            ErrorMsg = "Logowanie nieudane, proszę sprawdzić poprawność wprowadzonych danych.";
     }
 
     private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
