@@ -160,7 +160,11 @@ public partial class DatabaseViewModel : BaseViewModel
     private void DeleteRow()
     {
         if (SelectedItem != null)
-            DbModel.SelectedTable.Rows.Remove(SelectedItem.Row);
+        {
+            DataRow row = SelectedItem.Row;
+            row.Delete();
+        }
+            
     }
 
     [RelayCommand]
