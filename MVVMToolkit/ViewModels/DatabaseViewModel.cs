@@ -50,7 +50,7 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [ObservableProperty]
-    private string? _errorMsg = "";
+    private string _errorMsg = "";
 
     [ObservableProperty]
     private string? _searchBox = "";
@@ -168,7 +168,7 @@ public partial class DatabaseViewModel : BaseViewModel
     {
         //Filtering results in current table
         ErrorMsg = "";
-        if (!SearchBox.Equals(string.Empty))
+        if (SearchBox != null && !SearchBox.Equals(string.Empty))
         {
             StringBuilder sb = new StringBuilder();
             foreach (DataColumn column in DbModel.SelectedTable.Columns)
@@ -185,7 +185,7 @@ public partial class DatabaseViewModel : BaseViewModel
     partial void OnSearchBoxChanged(string? oldValue, string? newValue)
     {
         //Clearing search filter if search field empty
-        if (newValue.Equals(string.Empty))
+        if (newValue != null && newValue.Equals(string.Empty))
             SearchCommand.Execute(null);
     }
 }

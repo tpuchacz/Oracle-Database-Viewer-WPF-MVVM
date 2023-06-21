@@ -33,7 +33,8 @@
         </Grid.RowDefinitions>
 
         <!--Choosing table, searchbox-->
-        <DockPanel Margin="10">
+        <DockPanel Margin="10" Width="auto" Height="auto" LastChildFill="False"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TextBlock Text="Wybierz tabele:" FontSize="18" FontWeight="Bold" Margin="0,5,0,0"
                        TextAlignment="Center" DockPanel.Dock="Top"/>
             <ComboBox ItemsSource="{Binding DbModel.TableNames, IsAsync=True}"  FontSize="14"
@@ -45,20 +46,42 @@
             <TextBox Margin="10,5,10,5" Text="{Binding SearchBox, UpdateSourceTrigger=PropertyChanged}"
                      DockPanel.Dock="Top" mah:TextBoxHelper.Watermark="Szukana tresc"/>
             <Button Content="Szukaj" Command="{Binding SearchCommand}" Margin="10,0,10,0"
-                    IsEnabled="{Binding IsInteractionEnabled}" VerticalAlignment="Top"/>
+                    IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
         </DockPanel>
         
         <!--Accept/revert changes, add row-->
-        <DockPanel Grid.Row="1" Margin="10">
-            <Button Command="{Binding AddRowCommand}" Content="Dodaj rekord" Margin="0,10,0,0"
-                    IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
-            <Button Command="{Binding AcceptChangesCommand}" Content="Zatwierdz zmiany" Margin="0,10,0,0"
-                    IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
-            <Button Command="{Binding RejectChangesCommand}" Content="Cofnij zmiany" Margin="0,10,0,0"
-                    IsEnabled="{Binding IsInteractionEnabled}" DockPanel.Dock="Top"/>
-            <Button Command="{Binding DeleteRowCommand}" Content="Usun rekord" Margin="0,10,0,0"
-                    IsEnabled="{Binding IsInteractionEnabled}" VerticalAlignment="Top"/>
-        </DockPanel>
+        <Viewbox Stretch="Fill" StretchDirection="Both" Grid.Row="1"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Margin="10" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Button Command="{Binding AddRowCommand}" Margin="0,10,0,0"
+                    IsEnabled="{Binding IsInteractionEnabled}" Grid.Row="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBlock Text="Dodaj rekord" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Button>
+                <Button Command="{Binding AcceptChangesCommand}" Margin="0,10,0,0"
+                    IsEnabled="{Binding IsInteractionEnabled}" Grid.Row="1"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBlock Text="Zatwierdz zmiany" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Button>
+                <Button Command="{Binding RejectChangesCommand}" Margin="0,10,0,0"
+                    IsEnabled="{Binding IsInteractionEnabled}" Grid.Row="2"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBlock Text="Cofnij zmiany" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Button>
+                <Button Command="{Binding DeleteRowCommand}" Margin="0,10,0,0"
+                    IsEnabled="{Binding IsInteractionEnabled}" Grid.Row="3"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBlock Text="Usun rekord" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Button>
+            </Grid>
+        </Viewbox>
+        
 
         <!--Displaying DB tables-->
         <DataGrid ItemsSource="{Binding DbModel.SelectedTable, Mode=OneWay, IsAsync=True}" x:Name="oracleData"

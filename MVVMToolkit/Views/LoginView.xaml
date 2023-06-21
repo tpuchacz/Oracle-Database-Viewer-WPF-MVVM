@@ -21,7 +21,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
@@ -34,55 +34,87 @@
         </Grid.RowDefinitions>
         
         <!--Connection settings in a flyout-->
-        <mah:FlyoutsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                             Grid.RowSpan="7" Panel.ZIndex="100">
-            <mah:Flyout IsOpen="{Binding FlyoutOpen}" Header="Podaj nowe parametry połączenia"
-                        Position="Left" Width="auto" mah:HeaderedControlHelper.HeaderFontSize="16">
-                <DockPanel Margin="15">
-                    <TextBlock Text="Hostname" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding Hostname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="0,0,0,10" DockPanel.Dock="Top"
-                             mah:TextBoxHelper.Watermark="Adres IP bazy danych"/>
-                    <TextBlock Text="SID" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding Sid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             DockPanel.Dock="Top" mah:TextBoxHelper.Watermark="SID bazy danych"/>
-                    <TextBlock Text="Port" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             VerticalAlignment="Top"
+            <mah:FlyoutsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                            Grid.RowSpan="7" Panel.ZIndex="100">
+                <mah:Flyout IsOpen="{Binding FlyoutOpen}" Header="Parametry połączenia"
+                        Position="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            mah:HeaderedControlHelper.HeaderHorizontalContentAlignment="Stretch"
+                            mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Stretch"
+                            mah:HeaderedControlHelper.HeaderMargin="10">
+                    <Grid Margin="15" HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Hostname" Margin="0,0,0,5"
+                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               Grid.Row="0"/>
+                        <TextBox Text="{Binding Hostname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,10" Grid.Row="1"
+                             mah:TextBoxHelper.Watermark="Adres IP bazy danych"
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TextBlock Text="SID" Margin="0,0,0,5" Grid.Row="2"
+                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TextBox Text="{Binding Sid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Row="3" mah:TextBoxHelper.Watermark="SID bazy danych"
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                 Margin="0,0,0,10"/>
+                        <TextBlock Text="Port" Margin="0,0,0,5" Grid.Row="4"/>
+                        <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              mah:TextBoxHelper.Watermark="Nr portu bazy danych"/>
-                </DockPanel>
-            </mah:Flyout>
-        </mah:FlyoutsControl>
-        
+                    </Grid>
+                </mah:Flyout>
+            </mah:FlyoutsControl>
+        </Grid>
+
         <!--Button to show flyout-->
-        <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="0">
-            <Button Command="{Binding ChangeConnectionDataCommand}"
-                    Margin="10,0,10,0">
-                <Viewbox Stretch="Uniform">
-                    <TextBlock Text="Połączenie" FontWeight="Bold"/>
-                </Viewbox>
+        <Viewbox Stretch="Fill" Margin="5,5,0,0">
+            <Button Command="{Binding ChangeConnectionDataCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           Text="Połączenie"/>
             </Button>
         </Viewbox>
 
         <!--Entering user info-->
-        <DockPanel Grid.Column="1" Grid.Row="1" Margin="10">
+        <Grid Grid.Column="1" Grid.Row="1" Margin="10" Width="auto" Height="auto"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <TextBlock Text="Zaloguj się" HorizontalAlignment="Center" Margin="0,0,0,10"
-                       Foreground="White" FontWeight="Black" DockPanel.Dock="Top"
-                       Height="auto" FontSize="24"/>
+                       Foreground="White" FontWeight="Black"
+                       Height="auto" FontSize="20" Grid.Row="0"/>
             <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"  DockPanel.Dock="Top"
-                     Height="auto" FontSize="24" mah:TextBoxHelper.Watermark="Login"/>
+                     Height="auto" FontSize="20" mah:TextBoxHelper.Watermark="Login"
+                     Grid.Row="1"/>
             <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Margin="0,0,0,10"
-                         DockPanel.Dock="Top" Height="auto" FontSize="24"/>
+                         DockPanel.Dock="Top" Height="auto" FontSize="20"
+                         Grid.Row="2"/>
             <Button Content="Login" Command="{Binding ClickCommand}" Margin="0,0,0,10"
-                    IsDefault="True"  DockPanel.Dock="Top" Height="auto" FontSize="24"/>
+                    IsDefault="True" Height="auto" FontSize="20" Grid.Row="3"/>
             <ProgressBar IsIndeterminate="True" Visibility="{Binding ProgressVisibility}"
-                         VerticalAlignment="Top"/>
-        </DockPanel>
+                         Grid.Row="4"/>
+        </Grid>
 
         <Viewbox Grid.Row="2" Stretch="Uniform" Grid.ColumnSpan="3" Margin="10,0,10,5">
             <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" 
                        TextWrapping="WrapWithOverflow" HorizontalAlignment="Center"/>
         </Viewbox>
-        
     </Grid>
 </UserControl>
