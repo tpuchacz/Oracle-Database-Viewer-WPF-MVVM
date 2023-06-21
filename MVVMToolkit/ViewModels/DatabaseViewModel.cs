@@ -50,9 +50,6 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [ObservableProperty]
-    private int _selectedRowIndex = 0;
-
-    [ObservableProperty]
     private string? _errorMsg = "";
 
     [ObservableProperty]
@@ -69,6 +66,9 @@ public partial class DatabaseViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _isInteractionEnabled = false; //While data loading block all interaction; binded to buttons etc.
+
+    [ObservableProperty]
+    private DataRowView _selectedItem;
 
     private void Bgw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
@@ -92,7 +92,7 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public async void AcceptChanges()
+    private async void AcceptChanges()
     {
         ErrorMsg = "";
         //Checking for changes
@@ -121,7 +121,7 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public async void RejectChanges()
+    private async void RejectChanges()
     {
         var result = await _dialogCoordinator.ShowMessageAsync(this, "Cofnij zmiany", "Czy napewno chcesz cofnąć zmiany?",
                                                                MessageDialogStyle.AffirmativeAndNegative);
@@ -133,7 +133,7 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void AddRow()
+    private void AddRow()
     {
         DataRow dr = DbModel.SelectedTable.NewRow();
         //Checking PrimaryKey probably unnecessary
@@ -149,7 +149,7 @@ public partial class DatabaseViewModel : BaseViewModel
                     int maxID = Convert.ToInt32(DbModel.SelectedTable.Compute($"max([{DbModel.SelectedTable.Columns[0]}])", string.Empty));
                     dr[0] = maxID + 1;
                 }
-                catch (InvalidCastException ex) { } //Mostly in case there are no IDs
+                catch (InvalidCastException) { } //Mostly in case there are no IDs
             }
         }
         DbModel.SelectedTable.Rows.Add(dr);
@@ -157,16 +157,14 @@ public partial class DatabaseViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void DeleteRow()
+    private void DeleteRow()
     {
-        //ICollectionView view = CollectionViewSource.GetDefaultView(DbModel.SelectedTable);
-        //view.MoveCurrentToFirst();
-        //DataRowView dr = view.CurrentItem as DataRowView;
-        //DbModel.SelectedTable.Rows.Remove(dr.Row);
+        if (SelectedItem != null)
+            DbModel.SelectedTable.Rows.Remove(SelectedItem.Row);
     }
 
     [RelayCommand]
-    public void Search()
+    private void Search()
     {
         //Filtering results in current table
         ErrorMsg = "";

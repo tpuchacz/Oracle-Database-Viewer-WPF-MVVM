@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MVVMToolkit;
+using System.Data;
 
 namespace MVVMToolkit.Views;
 public partial class DatabaseView : UserControl

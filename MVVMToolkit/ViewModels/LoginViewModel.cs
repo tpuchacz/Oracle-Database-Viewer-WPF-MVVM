@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using MVVMToolkit.Services;
-using MVVMToolkit.ViewModels;
 using MVVMToolkit;
 using Microsoft.Extensions.Hosting;
 using System.ComponentModel;
@@ -38,13 +37,13 @@ public partial class LoginViewModel : BaseViewModel
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
-    private string? _port = "";
+    private string? _port = "1521";
 
     private string? connStr;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ClickCommand))]
-    private string? _login = "";
+    private string? _login = "msbd";
 
     public SecureString? SecurePassword { get; set; } //Password is encrypted in a SecureString, not converted to string
                                                       //Implementation in code-behind
@@ -99,7 +98,9 @@ public partial class LoginViewModel : BaseViewModel
     private void Bgw_DoWork(object? sender, DoWorkEventArgs e)
     {
         ProgressVisibility = "Visible";
+
         List<object> list = e.Argument as List<object>; //Retrieving credentials from args
+
         if (_databaseConnectionService.CheckCredentials((string)list.ElementAt(0), (OracleCredential)list.ElementAt(1)))
         {
             IMessenger messenger = Messenger;

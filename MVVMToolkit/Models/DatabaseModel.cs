@@ -11,19 +11,18 @@ namespace MVVMToolkit.Models;
 
 public partial class DatabaseModel : ObservableRecipient
 {
-    private List<DataTable> _tableList;
-    public List<DataTable> TableList
-    {
-        get { return _tableList; }
-        set { _tableList = value; }
-    }
     public DatabaseModel()
     {
         TableList = new List<DataTable>();
+        TableNames = new List<string>();
+        SelectedTable = new DataTable();
     }
 
     [ObservableProperty]
-    private int _selectedIndex = 0;
+    private List<DataTable> _tableList;
+
+    [ObservableProperty]
+    private int _selectedIndex;
 
     [ObservableProperty]
     private List<string> _tableNames;
@@ -33,7 +32,7 @@ public partial class DatabaseModel : ObservableRecipient
 
     partial void OnSelectedIndexChanged(int value)
     {
-        SelectedIndex = value;
         SelectedTable = TableList.ElementAt(SelectedIndex);
     }
+
 }

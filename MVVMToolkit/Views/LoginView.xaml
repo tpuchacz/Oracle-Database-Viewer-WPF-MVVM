@@ -41,21 +41,27 @@
                 <DockPanel Margin="15">
                     <TextBlock Text="Hostname" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding Hostname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="0,0,0,10" DockPanel.Dock="Top"/>
+                             Margin="0,0,0,10" DockPanel.Dock="Top"
+                             mah:TextBoxHelper.Watermark="Adres IP bazy danych"/>
                     <TextBlock Text="SID" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding Sid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             DockPanel.Dock="Top"/>
+                             DockPanel.Dock="Top" mah:TextBoxHelper.Watermark="SID bazy danych"/>
                     <TextBlock Text="Port" FontSize="20" Margin="0,0,0,10" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             VerticalAlignment="Top"/>
+                             VerticalAlignment="Top"
+                             mah:TextBoxHelper.Watermark="Nr portu bazy danych"/>
                 </DockPanel>
             </mah:Flyout>
         </mah:FlyoutsControl>
         
         <!--Button to show flyout-->
         <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="0">
-            <Button Content="Połączenie" Command="{Binding ChangeConnectionDataCommand}"
-                    Margin="5,0,5,0" FontSize="16"/>
+            <Button Command="{Binding ChangeConnectionDataCommand}"
+                    Margin="10,0,10,0">
+                <Viewbox Stretch="Uniform">
+                    <TextBlock Text="Połączenie" FontWeight="Bold"/>
+                </Viewbox>
+            </Button>
         </Viewbox>
 
         <!--Entering user info-->
@@ -64,18 +70,18 @@
                        Foreground="White" FontWeight="Black" DockPanel.Dock="Top"
                        Height="auto" FontSize="24"/>
             <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"  DockPanel.Dock="Top"
-                     Height="auto" FontSize="24"/>
+                     Height="auto" FontSize="24" mah:TextBoxHelper.Watermark="Login"/>
             <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Margin="0,0,0,10"
                          DockPanel.Dock="Top" Height="auto" FontSize="24"/>
             <Button Content="Login" Command="{Binding ClickCommand}" Margin="0,0,0,10"
-                        IsDefault="True"  DockPanel.Dock="Top" Height="auto" FontSize="24"/>
+                    IsDefault="True"  DockPanel.Dock="Top" Height="auto" FontSize="24"/>
             <ProgressBar IsIndeterminate="True" Visibility="{Binding ProgressVisibility}"
                          VerticalAlignment="Top"/>
         </DockPanel>
 
         <Viewbox Grid.Row="2" Stretch="Uniform" Grid.ColumnSpan="3" Margin="10,0,10,5">
             <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" 
-                   TextWrapping="WrapWithOverflow" HorizontalAlignment="Center"/>
+                       TextWrapping="WrapWithOverflow" HorizontalAlignment="Center"/>
         </Viewbox>
         
     </Grid>
